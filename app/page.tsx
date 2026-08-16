@@ -489,7 +489,7 @@ export default function Home() {
 
                   <div className="mt-6 border-t border-rule pt-4">
                     <p className="ev text-[0.5rem] text-ink-2">
-                      Takes it off the forecast
+                      We walk
                     </p>
                     <p className="mt-2 max-w-[30ch] text-[0.9375rem] leading-snug text-ink-2">
                       {/* struck on hover — the deal being removed */}

@@ -71,9 +71,8 @@ export default function HowWeSellPage() {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-measure text-[1.0625rem] leading-relaxed text-bone-2">
-              The left column is what has to be true. The right is what takes
-              it off the forecast — and the right column is the one that does
-              the work.
+              The left column is what has to be true. The right is what makes
+              us walk — and the right column is the one that does the work.
             </p>
           </Reveal>
         </div>
@@ -106,7 +105,7 @@ export default function HowWeSellPage() {
                 {/* what removes it */}
                 <div className="md:pt-7">
                   <p className="ev text-[0.5rem] text-gold">
-                    Takes it off the forecast
+                    We walk
                   </p>
                   <p className="mt-2.5 max-w-[32ch] text-[0.9375rem] leading-snug text-bone-2">
                     <span className="strike-lines [--strike-color:var(--color-gold)]">
