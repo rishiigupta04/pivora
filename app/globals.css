@@ -1,26 +1,619 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================
+   PIVORA DESIGN TOKENS
+
+   Two grounds, one meaning:
+     LIGHT (paper)  = the argument   — problem, POV, doors, founder
+     DARK  (carbon) = the machine    — BOS(T), execution engine
+
+   Two signals, one business model:
+     BLUE  #0022EE = Pivora   (brand mark; 7.6:1 on paper)
+     GOLD  #FFD700 = client   (brand mark; 13.4:1 on carbon)
+
+   Gold is only ever used on carbon. It measures 1.4:1 on white and
+   can never carry text on a light ground. This is why ownership
+   transfer is shown in the dark: it is the only place both signals
+   are legible at once.
+   ============================================================ */
+
+@theme {
+  /* --- light ground --- */
+  --color-paper: #f5f2ec;
+  /* paper-2 was too close to paper to register as a change of ground.
+     Deepened so alternating sections actually read as separate. */
+  --color-paper-2: #e9e4d9;
+  --color-paper-3: #ded8ca;
+  --color-ink: #14120e;
+  --color-ink-2: #4a463e;
+  --color-rule: #d6d0c4;
+
+  /* --- dark ground --- */
+  --color-carbon: #14120e;
+  --color-carbon-2: #1f1c17;
+  --color-carbon-3: #2a261f;
+  --color-bone: #ede9e1;
+  --color-bone-2: #a39d91;
+  --color-rule-dark: #322e27;
+
+  /* --- signals --- */
+  --color-blue: #0022ee;
+  --color-blue-deep: #001bb8;
+  --color-blue-lift: #6b85ff; /* blue, readable on carbon (5.8:1) */
+  --color-gold: #ffd700;
+  --color-gold-deep: #c9a800; /* gold, for hairlines on light only */
+
+  /* --- type --- */
+  --font-display: var(--font-newsreader), Georgia, serif;
+  --font-sans: var(--font-schibsted), system-ui, sans-serif;
+  --font-mono: var(--font-martian), ui-monospace, monospace;
+
+  /* --- editorial measure (container-* drives max-w-* in Tailwind v4) --- */
+  --container-measure: 34rem;
+  --container-wide: 78rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    /* No `scroll-behavior: smooth` — Lenis drives the scroll position and
+       the two fight each other, producing a stutter on anchor jumps. */
+    -webkit-text-size-adjust: 100%;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* The argument is set in Newsreader. Tight, dark, unfussy —
+     broadsheet authority, not display-serif fashion. */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.021em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Evidence is set in Martian Mono. Small, tracked out, rationed. */
+  .ev {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::selection {
+    background: var(--color-blue);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  .on-carbon :focus-visible {
+    outline-color: var(--color-gold);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* A hairline that reads as a printed rule, not a UI border. */
+  .rule-t {
+    border-top: 1px solid var(--color-rule);
+  }
+  .on-carbon .rule-t {
+    border-top-color: var(--color-rule-dark);
+  }
+
+  /* ==========================================================
+     SCROLL CHOREOGRAPHY
+
+     Built on CSS scroll-driven animations (`animation-timeline`)
+     rather than JavaScript observers. Three reasons that matters
+     here: it runs off the main thread, it costs no hydration, and
+     — critically — where the browser doesn't support it the
+     content simply renders normally. Copy can never be trapped
+     invisible behind a failed script.
+
+     Motion is entry-only and one-directional. Nothing re-hides on
+     scroll-up, because re-animating text the reader has already
+     read is the tell of a site performing rather than presenting.
+     ========================================================== */
+
+  .reveal {
+    opacity: 1;
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal {
+        animation: reveal-in linear both;
+        animation-timeline: view();
+        animation-range: entry 2% entry 42%;
+      }
+
+      /* Stagger within a group, so a list arrives as a sequence
+         rather than a block. */
+      .reveal-2 {
+        animation-range: entry 6% entry 48%;
+      }
+      .reveal-3 {
+        animation-range: entry 10% entry 54%;
+      }
+      .reveal-4 {
+        animation-range: entry 14% entry 60%;
+      }
+
+      /* Container opt-in: direct children of a [data-flow] element
+         reveal in sequence. Saves hand-tagging every node on the
+         deeper pages, and keeps the timing identical to .reveal. */
+      [data-flow] > * {
+        animation: reveal-in linear both;
+        animation-timeline: view();
+        animation-range: entry 2% entry 44%;
+      }
+
+      /* Handover bars draw themselves in on approach. Transform only,
+         so the width stays fixed and nothing re-lays-out per frame. */
+      .bar-draw {
+        animation: bar-draw cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-timeline: view();
+        animation-range: entry 12% entry 62%;
+        transform-origin: left center;
+      }
+
+      /* A slow, confident drift for large display type. */
+      .reveal-display {
+        animation: reveal-display linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 50%;
+      }
+    }
+  }
+
+  @keyframes reveal-in {
+    from {
+      opacity: 0;
+      transform: translateY(1.75rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Opacity and transform only. An earlier version also animated
+     letter-spacing, which reflows the text on every frame and can
+     re-wrap a heading mid-animation. */
+  @keyframes bar-draw {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes reveal-display {
+    from {
+      opacity: 0;
+      transform: translateY(2.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* First-load entrance. The hero assembles itself once, in sequence,
+     so the reader arrives into movement rather than into a wall. */
+  .intro {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .intro {
+      animation: intro-in 1000ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .intro-1 {
+      animation-delay: 80ms;
+    }
+    .intro-2 {
+      animation-delay: 200ms;
+    }
+    .intro-3 {
+      animation-delay: 330ms;
+    }
+    .intro-4 {
+      animation-delay: 460ms;
+    }
+    .intro-5 {
+      animation-delay: 590ms;
+    }
+  }
+
+  @keyframes intro-in {
+    from {
+      opacity: 0;
+      transform: translateY(1.75rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* ==========================================================
+     HEADLINE REVEAL
+
+     Type emerges from behind an edge instead of fading in. A fade
+     is the default every generated site reaches for; a masked rise
+     reads as typesetting, and it suits a face with real optical
+     sizing like Newsreader.
+     ========================================================== */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .rise {
+        animation: rise linear both;
+        animation-timeline: view();
+        animation-range: entry 4% entry 52%;
+      }
+      /* Horizontal rules draw themselves rather than appearing. */
+      .draw {
+        animation: draw cubic-bezier(0.22, 1, 0.36, 1) both;
+        animation-timeline: view();
+        animation-range: entry 8% entry 58%;
+        transform-origin: left center;
+      }
+      /* Figures arrive with a touch more weight than body copy. */
+      .lift {
+        animation: lift cubic-bezier(0.16, 1, 0.3, 1) both;
+        animation-timeline: view();
+        animation-range: entry 6% entry 56%;
+      }
+    }
+  }
+
+  @keyframes rise {
+    from {
+      clip-path: inset(0 0 108% 0);
+      transform: translateY(0.34em);
+      opacity: 0;
+    }
+    to {
+      clip-path: inset(0 0 -30% 0);
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  @keyframes draw {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes lift {
+    from {
+      opacity: 0;
+      transform: translateY(1.25rem) scale(0.965);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* ==========================================================
+     HOVER
+
+     Underlines wipe out from the right and in from the left, so a
+     link feels swept rather than switched. Buttons fill from the
+     bottom. Both are transform-only.
+     ========================================================== */
+  .wipe {
+    position: relative;
+  }
+  .wipe::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: -2px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 460ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .wipe:hover::after,
+  .wipe:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
+  .fill-up {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .fill-up::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--color-ink);
+    transform: scaleY(0);
+    transform-origin: bottom center;
+    transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .fill-up:hover::before,
+  .fill-up:focus-visible::before {
+    transform: scaleY(1);
+  }
+  .on-carbon .fill-up::before {
+    background: var(--color-gold);
+  }
+
+  /* ==========================================================
+     CURSOR
+
+     A precise dot on the pointer and a ring that trails it. Only
+     ever active on a fine pointer with motion allowed, and the
+     native cursor is hidden by a class the script adds — so if the
+     script never runs, the ordinary cursor is still there.
+     ========================================================== */
+  .cursor-dot,
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    border-radius: 9999px;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .cursor-dot {
+    width: 5px;
+    height: 5px;
+    background: var(--color-blue);
+  }
+  .cursor-ring {
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--color-blue);
+    transition:
+      background-color 300ms ease,
+      border-color 300ms ease,
+      opacity 300ms ease;
+  }
+  .cursor-ring.is-hover {
+    background: color-mix(in srgb, var(--color-blue) 10%, transparent);
+  }
+  html.cursor-dark .cursor-dot {
+    background: var(--color-gold);
+  }
+  html.cursor-dark .cursor-ring {
+    border-color: var(--color-gold);
+  }
+  html.cursor-dark .cursor-ring.is-hover {
+    background: color-mix(in srgb, var(--color-gold) 14%, transparent);
+  }
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none !important;
+  }
+
+  /* ==========================================================
+     STRIKE-THROUGH THAT SURVIVES WRAPPING
+
+     An absolutely-positioned bar can only sit at the centre of its
+     whole box, so on a two-line phrase it draws between the lines
+     instead of through them. A background gradient on an *inline*
+     element is painted once per line fragment — with
+     box-decoration-break: clone, every line gets its own stroke —
+     and animating background-size sweeps each one left to right.
+
+     The element must stay `display: inline`; inline-block collapses
+     it back to a single box and reintroduces the bug.
+     ========================================================== */
+  .strike-lines {
+    --strike-color: currentColor;
+    --strike-weight: 2px;
+    background-image: linear-gradient(
+      var(--strike-color),
+      var(--strike-color)
+    );
+    background-repeat: no-repeat;
+    background-position: 0 58%;
+    background-size: 0% var(--strike-weight);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    transition: background-size 520ms cubic-bezier(0.33, 0, 0.12, 1);
+  }
+
+  .group:hover .strike-lines,
+  .group:focus-within .strike-lines {
+    background-size: 100% var(--strike-weight);
+  }
+
+  /* Permanently struck, for text that is stating a negation rather than
+     reacting to a hover. */
+  .struck {
+    background-size: 100% var(--strike-weight);
+  }
+
+  @keyframes strike-in {
+    from {
+      background-size: 0% var(--strike-weight);
+    }
+    to {
+      background-size: 100% var(--strike-weight);
+    }
+  }
+
+  /* Draws itself once, on load. For the hero, where the strike is the
+     first gesture on the page and shouldn't simply be there already. */
+  .strike-draw {
+    background-size: 0% var(--strike-weight);
+    animation: strike-in 620ms cubic-bezier(0.33, 0, 0.12, 1) 900ms both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .strike-draw {
+      animation: none;
+      background-size: 100% var(--strike-weight);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .strike-lines {
+      transition: none;
+    }
+  }
+
+  /* ==========================================================
+     MOBILE FLOORS
+
+     Scoped to max-width so the desktop layout is untouched.
+
+     The mono label style is set as small as 8–9px in a few places,
+     which is fine on a large screen at reading distance and simply
+     unreadable on a phone. This puts a floor under it rather than
+     hunting down every override.
+
+     Inline text links are ~20–31px tall — visually right, but under
+     any sensible touch target. Padding the block axis raises the hit
+     area without moving the underline or changing the rhythm.
+     ========================================================== */
+  @media (max-width: 767px) {
+    .ev {
+      font-size: 0.6875rem !important;
+      letter-spacing: 0.085em;
+    }
+
+    /* There is no hover on a touch screen, so strikes are triggered by
+       StrikeOnView as each line is scrolled to — it adds `is-struck`, and
+       the base class's own transition draws it.
+
+       This replaced a CSS scroll timeline: `animation-timeline` is not
+       supported in iOS Safari, so its fallback was what actually shipped
+       and every line arrived already struck. */
+    .strike-lines.is-struck {
+      background-size: 100% var(--strike-weight);
+    }
+
+    /* !important because these carry a Tailwind `py-*` utility, and
+       utilities sit in a later cascade layer than components — without it
+       the rule is written and silently loses. */
+    .wipe {
+      padding-block: 0.7rem !important;
+    }
+
+    /* Small-label links ("How we qualify →", "Start one →") measured 21px
+       tall. They keep their underline; only the hit area grows. */
+    a.ev,
+    button.ev {
+      display: inline-block;
+      padding-block: 0.65rem !important;
+    }
+  }
+
+  /* Paper grain. Barely there — it reads as stock, not as texture. */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    pointer-events: none;
+    opacity: 0.022;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Zero-JS reading-progress hairline. */
+  .scroll-progress {
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .scroll-progress {
+      animation: progress-grow linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+
+  @keyframes progress-grow {
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  /* The scroll cue in the hero — a slow, unhurried pulse that
+     stops once the reader has started moving. */
+  @media (prefers-reduced-motion: no-preference) {
+    .cue-line {
+      animation: cue 2.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    }
+    @supports (animation-timeline: scroll()) {
+      .cue-fade {
+        animation: cue-out linear both;
+        animation-timeline: scroll(root block);
+        animation-range: 0 12vh;
+      }
+    }
+  }
+
+  @keyframes cue {
+    0% {
+      transform: scaleY(0);
+      transform-origin: 50% 0;
+    }
+    45% {
+      transform: scaleY(1);
+      transform-origin: 50% 0;
+    }
+    55% {
+      transform: scaleY(1);
+      transform-origin: 50% 100%;
+    }
+    100% {
+      transform: scaleY(0);
+      transform-origin: 50% 100%;
+    }
+  }
+
+  @keyframes cue-out {
+    to {
+      opacity: 0;
+    }
+  }
 }
