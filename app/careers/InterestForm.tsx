@@ -145,7 +145,7 @@ export default function InterestForm() {
       <button
         type="submit"
         disabled={pending}
-        className="fill-up mt-12 bg-blue px-9 py-4 text-[0.9375rem] text-white disabled:opacity-60"
+        className="fill-up mt-12 bg-primary px-9 py-4 text-[0.9375rem] text-white disabled:opacity-60"
       >
         {pending ? "Sending…" : "Send this"}
       </button>

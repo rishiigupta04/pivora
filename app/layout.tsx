@@ -90,7 +90,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           aria-hidden
           className="pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5"
         >
-          <div className="scroll-progress h-full w-full bg-blue" />
+          <div className="scroll-progress h-full w-full bg-primary" />
         </div>
         <SmoothScroll />
         <StrikeOnView />

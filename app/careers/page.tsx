@@ -72,7 +72,7 @@ export default function CareersPage() {
           <Reveal delay={0.2} mode="mount">
             <a
               href="#interest"
-              className="fill-up mt-9 inline-block bg-blue px-7 py-4 text-[0.9375rem] text-white"
+              className="fill-up mt-9 inline-block bg-primary px-7 py-4 text-[0.9375rem] text-white"
             >
               Tell us what you&apos;d build
             </a>

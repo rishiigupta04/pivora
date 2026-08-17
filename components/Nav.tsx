@@ -107,18 +107,19 @@ export default function Nav() {
                 href={l.href}
                 aria-current={active ? "page" : undefined}
                 className={`group relative flex items-center py-1 text-[0.9375rem] transition-colors duration-300 ${
-                  active ? "text-blue" : "text-ink-2 hover:text-ink"
+                  active ? "text-primary" : "text-ink-2 hover:text-ink"
                 }`}
               >
                 {l.label}
 
                 {/* Hover is carried by the underline sweep alone, and the
-                    current page by the solid indicator below it — the label
-                    colour shifts for both. */}
+                    current page by the solid indicator below it. Both are
+                    --color-primary; the current page is told apart by the
+                    indicator's weight (2px, solid) rather than by hue. */}
                 {!active && (
                   <span
                     aria-hidden
-                    className="absolute -bottom-0.5 left-0 h-px w-full origin-right scale-x-0 bg-ink transition-transform duration-500 ease-out group-hover:origin-left group-hover:scale-x-100"
+                    className="absolute -bottom-0.5 left-0 h-px w-full origin-right scale-x-0 bg-primary transition-transform duration-500 ease-out group-hover:origin-left group-hover:scale-x-100"
                   />
                 )}
 
@@ -126,13 +127,13 @@ export default function Nav() {
                   (still ? (
                     <span
                       aria-hidden
-                      className="absolute -bottom-0.5 left-0 h-0.5 w-full bg-blue"
+                      className="absolute -bottom-0.5 left-0 h-0.5 w-full bg-primary"
                     />
                   ) : (
                     <motion.span
                       layoutId="nav-indicator"
                       aria-hidden
-                      className="absolute -bottom-0.5 left-0 h-0.5 w-full bg-blue"
+                      className="absolute -bottom-0.5 left-0 h-0.5 w-full bg-primary"
                       transition={{ type: "spring", stiffness: 420, damping: 34 }}
                     />
                   ))}
@@ -169,7 +170,7 @@ export default function Nav() {
 
           <Link
             href="/contact"
-            className="fill-up bg-ink px-5 py-2.5 text-[0.9375rem] text-paper"
+            className="fill-up bg-primary px-5 py-2.5 text-[0.9375rem] text-paper"
           >
             Start a conversation
           </Link>
@@ -291,7 +292,7 @@ export default function Nav() {
               </div>
               <Link
                 href="/contact"
-                className="fill-up block bg-ink px-5 py-4 text-center text-paper xl:inline-block xl:px-9"
+                className="fill-up block bg-primary px-5 py-4 text-center text-paper xl:inline-block xl:px-9"
               >
                 Start a conversation
               </Link>

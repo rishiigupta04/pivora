@@ -240,7 +240,7 @@ export default function NicheAiPage() {
               </p>
               <Link
                 href="/contact"
-                className="fill-up shrink-0 bg-blue px-7 py-4 text-[0.9375rem] text-white"
+                className="fill-up shrink-0 bg-primary px-7 py-4 text-[0.9375rem] text-white"
               >
                 Start a conversation
               </Link>

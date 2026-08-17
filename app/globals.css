@@ -52,6 +52,13 @@
   --color-bone-2: #98a4b8; /* 7.5:1 on carbon */
   --color-rule-dark: #12294a;
 
+  /* --- primary ---
+     The near-black navy the brand sits on: primary buttons, the active
+     nav item and its indicator, and the reading-progress hairline. Close
+     enough to --color-carbon that it must never be placed on a carbon
+     ground — every primary button on this site sits on paper. */
+  --color-primary: #00112b;
+
   /* --- signals --- */
   --color-blue: #2c5c96; /* the logo navy lifted — 6.05:1 on paper */
   --color-blue-deep: #1e4478;
@@ -381,12 +388,16 @@
     isolation: isolate;
     overflow: hidden;
   }
+  /* Fills to the accent blue, not to ink. A primary button is already
+     --color-primary, and ink sits a hair off it — hovering between the
+     two was a change nobody could see. Lifting to the lighter accent
+     reads instantly, and white still clears 6.8:1 on it. */
   .fill-up::before {
     content: "";
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: var(--color-ink);
+    background: var(--color-blue);
     transform: scaleY(0);
     transform-origin: bottom center;
     transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
