@@ -23,10 +23,8 @@ import {
   PRINCIPLES,
   TRACKS,
   AI_SERVICES,
-  AI_RULE,
   CASE_PLACEHOLDER,
   INSIGHT_PILLARS,
-  ESSENCE,
 } from "@/lib/content";
 
 /**
@@ -656,10 +654,6 @@ export default function Home() {
               </Link>
             </div>
           </div>
-
-          <p className="ev mt-16 max-w-[52ch] border-t border-rule-dark pt-5 text-[0.5625rem] leading-relaxed text-bone-2">
-            {ESSENCE}
-          </p>
         </div>
       </section>
     </>
