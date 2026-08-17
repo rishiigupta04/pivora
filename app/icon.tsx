@@ -1,17 +1,30 @@
 import { ImageResponse } from "next/og";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
-export const size = { width: 32, height: 32 };
+export const size = { width: 64, height: 64 };
 export const contentType = "image/png";
 
 /**
- * Favicon: the logo's dot, inverted so it survives at 32px.
+ * Favicon: the P-in-circle, alone.
  *
- * The mark itself is a gold dot beside a blue wordmark. At favicon size
- * the wordmark is unreadable, so only the dot relationship is kept — gold
- * on brand blue, which stays legible against both light and dark browser
- * chrome.
+ * §14.1 is explicit — the P monogram is the mark for the favicon, the social
+ * avatar and every small application. It is the approved artwork isolated
+ * from the lock-up, not a redraw.
+ *
+ * Rendered at 64 rather than 32: the split ring is a hairline, and at 32 it
+ * broke up. Browsers downscale a larger icon cleanly, so the extra pixels
+ * cost nothing and the ring survives.
+ *
+ * The mark is navy and gold on transparent, which disappears against dark
+ * browser chrome — so it sits on its own paper tile, the same treatment the
+ * dark-ground wordmark gets.
  */
-export default function Icon() {
+export default async function Icon() {
+  const mark = await readFile(
+    join(process.cwd(), "public", "pivora-mark.png")
+  );
+
   return new ImageResponse(
     (
       <div
@@ -21,16 +34,15 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#0022EE",
+          background: "#F4F1EA",
         }}
       >
-        <div
-          style={{
-            width: 14,
-            height: 14,
-            borderRadius: 999,
-            background: "#FFD700",
-          }}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          width={54}
+          height={54}
+          alt=""
+          src={`data:image/png;base64,${mark.toString("base64")}`}
         />
       </div>
     ),

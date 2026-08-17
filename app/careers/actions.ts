@@ -1,60 +1,36 @@
 "use server";
 
 /**
- * Client enquiry submission.
+ * Candidate interest submission.
  *
- * The field list is §12's lead qualification framework. The form is meant
- * to qualify rather than collect: a longer form that produces fewer, better
- * conversations is the stated objective, not a conversion problem to fix.
- *
- * Kept entirely separate from the careers form (app/careers/actions.ts) —
- * different destination, different reader, different data.
+ * §12 is explicit that the Careers form must stay separate from the client
+ * Contact form — different destination, different fields, different reader.
+ * So this is its own action with its own webhook, rather than a shared
+ * endpoint with a "type" flag.
  *
  * IMPORTANT — pre-launch state.
- * There is currently no delivery destination configured. Rather than
- * returning a false success and silently dropping a lead, this action
- * validates the enquiry and then reports honestly that it cannot be
- * delivered yet.
+ * There is no delivery destination configured. Rather than returning a
+ * false success and silently dropping a candidate, this validates and then
+ * reports honestly that it cannot be delivered yet.
  *
- * To switch it on, set PIVORA_ENQUIRY_WEBHOOK to an endpoint that accepts
- * a JSON POST (a form service, a CRM intake, or an internal handler).
- *
- * Tracked in lib/content.ts → OPEN_ITEMS and surfaced on /review.
+ * To switch it on, set PIVORA_CAREERS_WEBHOOK to an endpoint that accepts a
+ * JSON POST. Tracked in lib/content.ts → OPEN_ITEMS and surfaced on /review.
  */
 
-import type { FormState } from "./state";
-
-const FIELDS = [
-  "name",
-  "role",
-  "company",
-  "email",
-  "website",
-  "direction",
-  "objective",
-  "stage",
-  "commercial",
-  "bos",
-  "building",
-  "message",
-] as const;
+import type { FormState } from "../contact/state";
 
 const REQUIRED: Record<string, string> = {
   name: "Tell us your name.",
-  role: "Your role helps us prepare for the conversation.",
-  company: "Tell us which company you're with.",
-  email: "We need a work email to reply to.",
-  direction: "Tell us which direction you're going — into India, or out of it.",
-  objective: "Tell us what the primary objective is.",
-  building: "A sentence on the platform and how far you've got is enough.",
+  email: "We need an email to reply to.",
+  building: "A few lines on what you'd want to build is the whole point.",
 };
 
-export async function submitEnquiry(
+export async function submitInterest(
   _prev: FormState,
   formData: FormData
 ): Promise<FormState> {
   const values: Record<string, string> = {};
-  for (const key of FIELDS) {
+  for (const key of ["name", "email", "links", "building"]) {
     values[key] = String(formData.get(key) ?? "").trim();
   }
 
@@ -76,7 +52,7 @@ export async function submitEnquiry(
     };
   }
 
-  const destination = process.env.PIVORA_ENQUIRY_WEBHOOK;
+  const destination = process.env.PIVORA_CAREERS_WEBHOOK;
 
   if (!destination) {
     return {
@@ -108,7 +84,7 @@ export async function submitEnquiry(
   return {
     status: "sent",
     message:
-      "Thank you — that has reached us. You will hear back from Subrato directly.",
+      "Thank you — that has reached us. If there's a fit we'll come back to you directly.",
     errors: {},
     values: {},
   };

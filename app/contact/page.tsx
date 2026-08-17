@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import ContactForm from "./ContactForm";
-import { Float, Reveal, StaggerList, StaggerRow } from "@/components/motion";
+import {
+  Float,
+  Reveal,
+  StaggerList,
+  StaggerRow,
+} from "@/components/motion";
+import { QUALIFY } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Tell Pivora what you're building in India. If we're not the right partner, we'll say so in the first conversation.",
+    "Tell Pivora what you're building. An executive conversation, not generic lead capture — and if we're not the right partner you'll hear it in the first one.",
 };
 
 const NEXT = [
@@ -17,7 +24,7 @@ const NEXT = [
   {
     n: "02",
     head: "A short call, under NDA",
-    body: "Thirty minutes. We'll ask what you've tried in India already and what went wrong with it, because that's the useful part.",
+    body: "Thirty minutes. We'll ask what you've already tried in this market and what went wrong with it, because that is the useful part.",
   },
   {
     n: "03",
@@ -51,16 +58,16 @@ export default function ContactPage() {
               Start a conversation
             </p>
             <h1 className="mt-7 max-w-[15ch] text-[clamp(2.5rem,6.2vw,5rem)] leading-[0.96]">
-              Tell us what you&apos;re{" "}
-              <span className="text-blue">building</span>.
+              Let&apos;s build the{" "}
+              <span className="text-blue">growth path</span>.
             </h1>
           </Reveal>
           <Reveal delay={0.12} mode="mount">
             <p className="mt-8 max-w-measure text-lg leading-relaxed text-ink-2">
-              You&apos;ll speak to Subrato, not to a qualification layer. If
-              Pivora isn&apos;t the right partner for what you&apos;re trying
-              to do, you&apos;ll hear that in the first conversation rather
-              than the third.
+              You&apos;ll speak to Subrato, not to a qualification layer. The
+              form below asks more than a marketing form would, on purpose —
+              we are optimising for the right conversations rather than for
+              the most of them.
             </p>
           </Reveal>
         </div>
@@ -72,6 +79,42 @@ export default function ContactPage() {
           <Reveal>
             <ContactForm />
           </Reveal>
+        </div>
+      </section>
+
+      {/* ── WHAT WE ARE LOOKING FOR — §12 ────────────────────────────── */}
+      <section className="border-b border-rule">
+        <div className="mx-auto max-w-wide px-6 py-20 lg:px-10 lg:py-28">
+          <div className="grid gap-10 md:grid-cols-[1fr_1.35fr] md:gap-14 lg:gap-24">
+            <Reveal kind="mask">
+              <p className="ev text-ink-2">What we are looking for</p>
+              <h2 className="mt-6 text-[clamp(1.875rem,3.8vw,2.875rem)] leading-[1.05]">
+                Six things, and it is better to know now.
+              </h2>
+              <p className="mt-6 max-w-measure text-[1.0625rem] leading-relaxed text-ink-2">
+                Publishing the standard means you can hold the enquiry
+                against it before sending anything — and it means a
+                &ldquo;no&rdquo; from us is a judgement about fit rather than
+                about you.
+              </p>
+            </Reveal>
+
+            <StaggerList className="self-start">
+              {QUALIFY.map((q) => (
+                <StaggerRow
+                  key={q.dimension}
+                  className="group grid items-baseline gap-x-8 gap-y-1.5 border-t border-rule py-5 last:border-b sm:grid-cols-[12rem_1fr]"
+                >
+                  <p className="text-[1.125rem] leading-snug text-ink transition-transform duration-500 group-hover:translate-x-1">
+                    {q.dimension}
+                  </p>
+                  <p className="text-[1.0625rem] leading-snug text-ink-2">
+                    {q.expectation}
+                  </p>
+                </StaggerRow>
+              ))}
+            </StaggerList>
+          </div>
         </div>
       </section>
 
@@ -93,7 +136,7 @@ export default function ContactPage() {
                   key={s.n}
                   className="group grid gap-4 border-t border-rule-dark py-8 last:border-b sm:grid-cols-[4.5rem_1fr] sm:gap-8"
                 >
-                  <span className="font-display text-[2.5rem] leading-none text-gold/45 transition-colors duration-500 group-hover:text-gold">
+                  <span className="font-display text-[2.5rem] leading-none text-gold/70 transition-colors duration-500 group-hover:text-gold">
                     {s.n}
                   </span>
                   <div>
@@ -108,6 +151,21 @@ export default function ContactPage() {
               ))}
             </StaggerList>
           </div>
+
+          <Reveal className="rule-t mt-16 pt-10">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+              <p className="max-w-[46ch] text-[1.0625rem] leading-relaxed text-bone-2">
+                Looking for a role rather than an engagement? The careers page
+                has its own form, and it goes to a different inbox.
+              </p>
+              <Link
+                href="/careers"
+                className="ev shrink-0 border-b border-gold pb-1 text-gold transition-opacity hover:opacity-70"
+              >
+                Careers →
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </section>
     </>

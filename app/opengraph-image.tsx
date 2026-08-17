@@ -1,6 +1,9 @@
 import { ImageResponse } from "next/og";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 
-export const alt = "Pivora Consulting — Don't just enter India. Build an India business.";
+export const alt =
+  "Pivora Consulting — Enterprise B2B platforms. India to global.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -15,8 +18,16 @@ export const contentType = "image/png";
  * No webfont is fetched. Pulling Newsreader at build time would add a
  * network dependency to every build for a 1200×630 image nobody reads
  * closely — composition and colour carry the brand here instead.
+ *
+ * The lock-up is the approved artwork, as §18 requires of the social
+ * preview, read off disk and inlined so the render has no network
+ * dependency either.
  */
-export default function Image() {
+export default async function Image() {
+  const logo = await readFile(
+    join(process.cwd(), "public", "pivora-logo.png")
+  );
+
   return new ImageResponse(
     (
       <div
@@ -26,40 +37,19 @@ export default function Image() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#F5F2EC",
+          background: "#F4F1EA",
           padding: "72px 80px",
         }}
       >
-        {/* wordmark */}
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div
-            style={{
-              width: 22,
-              height: 22,
-              borderRadius: 999,
-              background: "#0022EE",
-            }}
+        {/* the approved lock-up */}
+        <div style={{ display: "flex" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            width={352}
+            height={80}
+            alt=""
+            src={`data:image/png;base64,${logo.toString("base64")}`}
           />
-          <div
-            style={{
-              fontSize: 40,
-              fontWeight: 700,
-              letterSpacing: "-0.04em",
-              color: "#14120E",
-            }}
-          >
-            pivora
-          </div>
-          <div
-            style={{
-              fontSize: 17,
-              letterSpacing: "0.18em",
-              color: "#4A463E",
-              paddingTop: 8,
-            }}
-          >
-            CONSULTING
-          </div>
         </div>
 
         {/* the statement */}
@@ -69,40 +59,40 @@ export default function Image() {
               fontSize: 78,
               lineHeight: 1.03,
               letterSpacing: "-0.035em",
-              color: "#14120E",
+              color: "#00173E",
             }}
           >
-            Don&apos;t just enter India.
+            Enterprise B2B platforms.
           </div>
           <div
             style={{
               fontSize: 78,
               lineHeight: 1.03,
               letterSpacing: "-0.035em",
-              color: "#0022EE",
+              color: "#2C5C96",
             }}
           >
-            Build an India business.
+            India to global.
           </div>
           <div
             style={{
               marginTop: 30,
               fontSize: 26,
               lineHeight: 1.4,
-              color: "#4A463E",
-              maxWidth: 780,
+              color: "#55617A",
+              maxWidth: 800,
             }}
           >
-            An operating partner for global B2B software companies — inside
-            the work, accountable for the number, built to hand it over.
+            A specialist GTM and growth firm for high-value Enterprise B2B
+            platforms — one firm, two directions of value.
           </div>
         </div>
 
         {/* the handover bar: our share falling into yours */}
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
           <div style={{ display: "flex", width: "100%", height: 12 }}>
-            <div style={{ width: "34%", background: "#0022EE" }} />
-            <div style={{ flex: 1, background: "#FFD700" }} />
+            <div style={{ width: "34%", background: "#2C5C96" }} />
+            <div style={{ flex: 1, background: "#B88741" }} />
           </div>
           <div
             style={{
@@ -110,11 +100,11 @@ export default function Image() {
               justifyContent: "space-between",
               fontSize: 16,
               letterSpacing: "0.18em",
-              color: "#4A463E",
+              color: "#55617A",
             }}
           >
-            <div>INDIA GTM — OPERATING PARTNER</div>
-            <div>BUILD · OPERATE · SUSTAIN · TRANSFER</div>
+            <div>GLOBAL → INDIA · INDIA → GLOBAL</div>
+            <div>BUILT · OPERATE · SUSTAIN</div>
           </div>
         </div>
       </div>

@@ -10,12 +10,17 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 /**
  * The handover, read in one glance.
  *
- * Four rows, blue retreating and gold advancing down the page. Each row
+ * Three rows, blue retreating and gold advancing down the page. Each row
  * carries an oversized ghosted letter drifting behind it — the letters are
  * the only ornament, and they earn it by being the model's actual name.
  *
- * Still no percentages printed on the bars. The weights encode the shape of
- * the model, not a measured figure from any engagement, and a printed "65%"
+ * Sustain does not end at zero, and that is the point. Brief §5: SUSTAIN
+ * never means "leave the client" — dependence on Pivora falls because the
+ * client's capability rises, and Pivora's remaining share is the strategic
+ * end of the work. A bar that emptied would be telling a different story.
+ *
+ * No percentages printed on the bars. The weights encode the shape of the
+ * model, not a measured figure from any engagement, and a printed "60%"
  * would read as a claim we cannot source.
  */
 export default function Handover() {
@@ -66,9 +71,6 @@ export default function Handover() {
                 {p.letter}
               </span>
               <span className="text-[1.0625rem] text-bone">{p.name}</span>
-              {p.optional && (
-                <span className="ev text-[0.5rem] text-gold">Optional</span>
-              )}
             </div>
 
             <div

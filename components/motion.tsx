@@ -11,7 +11,7 @@ import {
   useTransform,
   type Variants,
 } from "motion/react";
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 /**
  * Motion primitives.
@@ -255,6 +255,20 @@ export function Parallax({
  * only the number animates, and preserves the original decimal places and
  * thousands grouping — a figure that lands on "161.53B" or drops a comma
  * would be a different, wrong number.
+ *
+ * THE MOTION VALUE IS SEEDED AT THE TARGET, NOT AT ZERO.
+ *
+ * Seeded at zero, the server rendered "$0.0B" next to "Source — Gartner ·
+ * 2025" and only corrected itself once the browser ran the effect. Anything
+ * reading the HTML rather than the painted page — a crawler that does not
+ * execute JS, a preview scraper, a reader with scripting off — got a wrong
+ * number with a citation attached to it, which is worse than no number.
+ *
+ * So the true figure is what ships in the markup, and the count-up is armed
+ * afterwards, and only for figures that are still off-screen when the
+ * effect runs. Resetting to zero under a reader who can already see the
+ * number would flick it; a figure that is above the fold simply arrives at
+ * its real value, which is the right behaviour anyway.
  */
 export function CountUp({
   value,
@@ -276,24 +290,41 @@ export function CountUp({
   const decimals = (numStr.split(".")[1] ?? "").length;
   const grouped = numStr.includes(",");
 
-  const mv = useMotionValue(0);
+  const mv = useMotionValue(target);
+  const [armed, setArmed] = useState(false);
   const shown = useTransform(mv, (v) =>
-    (grouped
+    grouped
       ? v.toLocaleString("en-US", {
           minimumFractionDigits: decimals,
           maximumFractionDigits: decimals,
         })
-      : v.toFixed(decimals))
+      : v.toFixed(decimals)
   );
 
+  /* Arm only what the reader cannot currently see. */
   useEffect(() => {
-    if (!inView || still || !parts) return;
+    if (still || !parts) return;
+    const el = ref.current;
+    if (!el) return;
+    const box = el.getBoundingClientRect();
+    const offscreen = box.top > window.innerHeight || box.bottom < 0;
+    if (offscreen) {
+      mv.set(0);
+      setArmed(true);
+    }
+    // Deliberately mount-only: re-running this on scroll would re-zero a
+    // figure the reader has already watched count up.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!armed || !inView || still) return;
     const controls = animate(mv, target, {
       duration: 1.5,
       ease: [0.16, 1, 0.3, 1],
     });
     return () => controls.stop();
-  }, [inView, still, target, mv, parts]);
+  }, [armed, inView, still, target, mv]);
 
   if (!parts || still) return <span className={className}>{value}</span>;
 

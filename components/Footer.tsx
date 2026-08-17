@@ -1,51 +1,46 @@
 import Link from "next/link";
-import Wordmark from "./Wordmark";
+import { INDEX } from "@/lib/nav";
+import { LEGAL_ENTITY, LEGAL_PAGES } from "@/lib/content";
 
-const COLS = [
-  {
-    head: "The work",
-    links: [
-      { href: "/model", label: "The BOS(T) Model" },
-      { href: "/model#engine", label: "Execution Engine" },
-      { href: "/doors", label: "Three Doors" },
-      { href: "/how-we-sell", label: "How We Sell" },
-    ],
-  },
-  {
-    head: "The firm",
-    links: [
-      { href: "/founder", label: "Founder" },
-      { href: "/founder#fit", label: "Who's a fit" },
-      { href: "/contact", label: "Contact" },
-    ],
-  },
-] as const;
-
+/**
+ * The footer carries the full map, so nothing defined in §3.2 depends on a
+ * visitor opening the header index to find it.
+ *
+ * §15.1 lists four items for the registration block — entity name,
+ * registered address, LLPIN/CIN and GST number — and asks which should be
+ * public. Only the entity name is published until that comes back; a
+ * placeholder address would be worse than an absent one.
+ */
 export default function Footer() {
   return (
     <footer className="on-carbon bg-carbon text-bone">
       <div className="mx-auto max-w-wide px-6 py-16 lg:px-10 lg:py-20">
-        <div className="grid gap-12 md:grid-cols-[1.4fr_1fr_1fr]">
+        <div className="grid gap-12 lg:grid-cols-[1.3fr_repeat(3,1fr)]">
+          {/* No lock-up here on purpose. §14.1 places the full lock-up on
+              the header and supplies no reversed version, and the navy
+              wordmark is unreadable on carbon — so the alternative was a
+              paper plate floating in a dark footer, which read as a sticker
+              stuck onto the design. The brand statement carries it in type
+              instead, and the entity is named in the legal block below. */}
           <div>
-            <Wordmark tone="dark" />
-            <p className="mt-6 max-w-[26rem] font-display text-[1.375rem] leading-[1.35] text-bone">
-              Don&apos;t just enter India.
+            <p className="max-w-[24rem] font-display text-[1.75rem] leading-[1.3] text-bone">
+              Enterprise B2B platforms.
               <br />
-              Build an India business.
+              India to global.
             </p>
             <p className="mt-5 max-w-[24rem] text-sm leading-relaxed text-bone-2">
-              An operating partner for global B2B software companies — inside
-              the GTM motion, accountable for the number, and built to be
-              handed over.
+              A specialist GTM and growth firm for high-value Enterprise B2B
+              platforms — one firm, two directions of value, and an operating
+              model built to be handed over.
             </p>
           </div>
 
-          {COLS.map((col) => (
+          {INDEX.map((col) => (
             <div key={col.head}>
               <h2 className="ev text-bone-2">{col.head}</h2>
               <ul className="mt-5 space-y-3">
                 {col.links.map((l) => (
-                  <li key={l.href + l.label}>
+                  <li key={l.href}>
                     <Link
                       href={l.href}
                       // Footer links measured 19px tall on a phone. Block
@@ -62,10 +57,27 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="rule-t mt-14 flex flex-col gap-3 pt-6 text-xs text-bone-2 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Pivora Consulting.</p>
+        {/* ── legal & registration ─────────────────────────────── */}
+        <div className="rule-t mt-14 pt-8">
+          <p className="text-sm text-bone">{LEGAL_ENTITY}</p>
+          <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1">
+            {LEGAL_PAGES.map((p) => (
+              <li key={p.slug}>
+                <Link
+                  href={`/${p.slug}`}
+                  className="block py-2 text-sm text-bone-2 transition-colors hover:text-gold md:py-0"
+                >
+                  {p.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="mt-8 flex flex-col gap-3 text-xs text-bone-2 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} {LEGAL_ENTITY}.</p>
           <p className="ev text-[0.5625rem]">
-            Operating partner — not an advisor
+            Specialist · Selective · Outcome-led · Ecosystem-connected
           </p>
         </div>
       </div>

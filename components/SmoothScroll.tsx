@@ -2,11 +2,14 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import { SCROLL_LOCK } from "@/lib/scroll-lock";
 
 type Instance = {
   destroy?: () => void;
   lenisInstance?: {
     resize?: () => void;
+    stop?: () => void;
+    start?: () => void;
     scrollTo?: (
       target: number,
       opts?: { immediate?: boolean; force?: boolean }
@@ -82,6 +85,28 @@ export default function SmoothScroll() {
       inst.current?.destroy?.();
       inst.current = null;
     };
+  }, []);
+
+  /**
+   * Park Lenis while a full-screen overlay is open.
+   *
+   * Locking the body stops native scrolling but not Lenis, which drives the
+   * scroll position from its own animation loop — so the page would carry
+   * on moving behind the index panel. Stopping it also makes Lenis swallow
+   * wheel events over the overlay instead of acting on them, which is what
+   * we want everywhere except the panel's own scrollable list. That list
+   * carries `data-lenis-prevent`, and Lenis checks for it before it checks
+   * whether it is stopped, so native scrolling there still works.
+   */
+  useEffect(() => {
+    const onLock = (e: Event) => {
+      const locked = (e as CustomEvent<boolean>).detail;
+      const lenis = inst.current?.lenisInstance;
+      if (locked) lenis?.stop?.();
+      else lenis?.start?.();
+    };
+    window.addEventListener(SCROLL_LOCK, onLock);
+    return () => window.removeEventListener(SCROLL_LOCK, onLock);
   }, []);
 
   /**

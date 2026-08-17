@@ -32,14 +32,18 @@ const martian = Martian_Mono({
   display: "swap",
 });
 
+/* §14.11 — the approved home title and meta description, verbatim. */
+const TITLE =
+  "Pivora Consulting | Enterprise B2B Platform GTM | India to Global";
+
 const DESCRIPTION =
-  "Pivora is an operating partner for global B2B software companies building, running and eventually transferring their India business.";
+  "Pivora Consulting helps high-value Enterprise B2B platform companies enter and scale in India through Enterprises, GCCs and GSIs, and use India as a launchpad for global growth.";
 
 export const metadata: Metadata = {
   // Absolute URLs for OG tags and canonicals are resolved against this.
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Pivora Consulting — Build an India business",
+    default: TITLE,
     template: "%s · Pivora Consulting",
   },
   description: DESCRIPTION,
@@ -47,14 +51,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Pivora Consulting",
-    title: "Pivora Consulting — Build an India business",
+    title: TITLE,
     description: DESCRIPTION,
     url: "/",
     locale: "en_GB",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pivora Consulting — Build an India business",
+    title: TITLE,
     description: DESCRIPTION,
   },
 };

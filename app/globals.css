@@ -3,45 +3,61 @@
 /* ============================================================
    PIVORA DESIGN TOKENS
 
+   Every colour here comes from the approved lock-up. Sampled off the
+   artwork itself rather than transcribed from a spec:
+
+     NAVY  #00173E  — the wordmark and the P
+     GOLD  #B88741  — the CONSULTING line, the ring, the accent in the A
+
    Two grounds, one meaning:
-     LIGHT (paper)  = the argument   — problem, POV, doors, founder
-     DARK  (carbon) = the machine    — BOS(T), execution engine
+     LIGHT (paper)  = the argument   — problem, position, ecosystem, founder
+     DARK  (carbon) = the machine    — Built–Operate–Sustain, the engine
 
    Two signals, one business model:
-     BLUE  #0022EE = Pivora   (brand mark; 7.6:1 on paper)
-     GOLD  #FFD700 = client   (brand mark; 13.4:1 on carbon)
+     BLUE  = Pivora   GOLD = client
 
-   Gold is only ever used on carbon. It measures 1.4:1 on white and
-   can never carry text on a light ground. This is why ownership
-   transfer is shown in the dark: it is the only place both signals
-   are legible at once.
+   THE TWO WORKING VARIANTS, AND WHY THEY EXIST.
+
+   The logo navy is the site's ink — headings and body, 15.6:1 on paper.
+   That leaves it unusable as an accent against itself, so `--color-blue`
+   is the same navy lifted in value: same hue family, 6.05:1 on paper,
+   and 2.58:1 against the ink it has to be distinguishable from.
+
+   The logo gold is 2.8:1 on paper and cannot carry text there. It keeps
+   its exact value everywhere it is decoration or sits on carbon (5.9:1),
+   and `--color-gold-deep` is the same hue and saturation stepped down in
+   lightness until it clears 4.5:1 on both light grounds — for the few
+   places gold has to be read as words on paper.
+
+   Gold never carries small text on a light ground, and is never the only
+   indicator of meaning.
    ============================================================ */
 
 @theme {
   /* --- light ground --- */
-  --color-paper: #f5f2ec;
+  --color-paper: #f4f1ea;
   /* paper-2 was too close to paper to register as a change of ground.
      Deepened so alternating sections actually read as separate. */
-  --color-paper-2: #e9e4d9;
-  --color-paper-3: #ded8ca;
-  --color-ink: #14120e;
-  --color-ink-2: #4a463e;
-  --color-rule: #d6d0c4;
+  --color-paper-2: #e8e3d8;
+  --color-paper-3: #dcd5c7;
+  --color-ink: #00173e; /* the logo navy, unmodified — 15.6:1 on paper */
+  --color-ink-2: #55617a; /* 5.5:1 on paper, 4.9:1 on paper-2 */
+  --color-rule: #d5cfc2;
 
   /* --- dark ground --- */
-  --color-carbon: #14120e;
-  --color-carbon-2: #1f1c17;
-  --color-carbon-3: #2a261f;
-  --color-bone: #ede9e1;
-  --color-bone-2: #a39d91;
-  --color-rule-dark: #322e27;
+  --color-carbon: #00112c; /* the logo navy, one step deeper */
+  --color-carbon-2: #061c3a;
+  --color-carbon-3: #0e2749;
+  --color-bone: #edeae3;
+  --color-bone-2: #98a4b8; /* 7.5:1 on carbon */
+  --color-rule-dark: #12294a;
 
   /* --- signals --- */
-  --color-blue: #0022ee;
-  --color-blue-deep: #001bb8;
-  --color-blue-lift: #6b85ff; /* blue, readable on carbon (5.8:1) */
-  --color-gold: #ffd700;
-  --color-gold-deep: #c9a800; /* gold, for hairlines on light only */
+  --color-blue: #2c5c96; /* the logo navy lifted — 6.05:1 on paper */
+  --color-blue-deep: #1e4478;
+  --color-blue-lift: #7fa3dc; /* lifted further, for carbon (7.3:1) */
+  --color-gold: #b88741; /* the logo gold, unmodified — 5.9:1 on carbon */
+  --color-gold-deep: #815e2e; /* same hue, darkened for text on paper */
 
   /* --- type --- */
   --font-display: var(--font-newsreader), Georgia, serif;
