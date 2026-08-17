@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import TimelineNote from "@/components/TimelineNote";
 import {
-  Float,
   Parallax,
   Reveal,
   StaggerList,
@@ -17,7 +16,6 @@ import {
   GROUND_ZERO_DISCIPLINES,
   QUOTES,
   COVERAGE,
-  KPMG_PROOF,
   TRACKS,
   FIT,
   NOT_A_FIT,
@@ -310,95 +308,6 @@ export default function AboutPage() {
                 </span>
               </footer>
             </blockquote>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ── THE SEPARATION ───────────────────────────────────────────────
-          The content rule ("never imply Pivora achieved a former employer's
-          result") is enforced by the layout. Two grounds, a hard seam down
-          the middle, and neither side borrowing the other's credibility. */}
-      <section className="border-b border-rule">
-        <div className="mx-auto max-w-wide px-6 pt-20 lg:px-10 lg:pt-28">
-          <Reveal kind="mask">
-            <p className="ev text-blue">The record</p>
-            <h2 className="mt-6 max-w-[22ch] text-[clamp(1.875rem,3.8vw,2.875rem)] leading-[1.05]">
-              Two records. Kept apart on purpose.
-            </h2>
-          </Reveal>
-        </div>
-
-        <div className="mx-auto mt-14 grid max-w-wide gap-px bg-rule md:grid-cols-2">
-          {/* career */}
-          <Reveal className="relative overflow-hidden bg-paper px-6 py-12 lg:px-10 lg:py-14">
-            <Float
-              amplitude={9}
-              duration={10}
-              className="pointer-events-none absolute -top-10 -right-4 select-none"
-            >
-              <span
-                aria-hidden
-                className="font-display text-[5rem] leading-none text-blue/[0.06] md:text-[9rem]"
-              >
-                01
-              </span>
-            </Float>
-            <div className="relative">
-              <p className="ev flex items-center gap-3 text-blue">
-                <span aria-hidden className="h-px w-6 bg-blue" />
-                Subrato&apos;s career — before Pivora
-              </p>
-              <p className="mt-8 max-w-[36ch] text-[clamp(1.125rem,1.9vw,1.375rem)] leading-snug text-ink">
-                Everything on the timeline above belongs to the companies he
-                worked for. The outcomes are theirs.
-              </p>
-
-              <div className="mt-9 border-l-2 border-blue pl-6">
-                <p className="ev text-ink-2">Milestone — {KPMG_PROOF.year}</p>
-                <p className="mt-2 text-[1.125rem] leading-snug text-ink">
-                  {KPMG_PROOF.what}
-                </p>
-                <p className="mt-3 text-sm leading-relaxed text-ink-2">
-                  {KPMG_PROOF.note}
-                </p>
-              </div>
-            </div>
-          </Reveal>
-
-          {/* pivora */}
-          <Reveal
-            delay={0.12}
-            className="relative overflow-hidden bg-paper-2 px-6 py-12 lg:px-10 lg:py-14"
-          >
-            <Float
-              amplitude={7}
-              duration={12}
-              delay={1}
-              className="pointer-events-none absolute -top-10 -right-4 select-none"
-            >
-              <span
-                aria-hidden
-                className="font-display text-[5rem] leading-none text-ink/[0.05] md:text-[9rem]"
-              >
-                02
-              </span>
-            </Float>
-            <div className="relative">
-              <p className="ev flex items-center gap-3 text-ink-2">
-                <span aria-hidden className="h-px w-6 bg-ink-2" />
-                Pivora&apos;s own engagements
-              </p>
-              <p className="mt-8 max-w-[34ch] text-[clamp(1.125rem,1.9vw,1.375rem)] leading-snug text-ink">
-                Client work is covered by confidentiality and is published
-                only once it is approved and verifiable. We&apos;ll talk about
-                it directly, under NDA, in the first conversation.
-              </p>
-              <p className="mt-6 max-w-[38ch] text-[0.9375rem] leading-relaxed text-ink-2">
-                Nothing in the column to the left is a Pivora result. Those
-                outcomes belong to the companies Subrato held those roles at,
-                and they stay there.
-              </p>
-            </div>
           </Reveal>
         </div>
       </section>

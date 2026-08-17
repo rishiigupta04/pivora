@@ -106,21 +106,15 @@ export default function Nav() {
                 key={l.href}
                 href={l.href}
                 aria-current={active ? "page" : undefined}
-                className={`group relative flex items-center gap-2 py-1 text-[0.9375rem] transition-colors duration-300 ${
+                className={`group relative flex items-center py-1 text-[0.9375rem] transition-colors duration-300 ${
                   active ? "text-blue" : "text-ink-2 hover:text-ink"
                 }`}
               >
-                {/* a dot slides in ahead of the label on hover */}
-                <span
-                  aria-hidden
-                  className={`block size-1.5 rounded-full bg-blue transition-all duration-400 ease-out ${
-                    active
-                      ? "scale-100 opacity-100"
-                      : "-ml-3.5 scale-0 opacity-0 group-hover:ml-0 group-hover:scale-100 group-hover:opacity-100"
-                  }`}
-                />
                 {l.label}
 
+                {/* Hover is carried by the underline sweep alone, and the
+                    current page by the solid indicator below it — the label
+                    colour shifts for both. */}
                 {!active && (
                   <span
                     aria-hidden

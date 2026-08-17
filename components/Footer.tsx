@@ -74,11 +74,8 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="mt-8 flex flex-col gap-3 text-xs text-bone-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 text-xs text-bone-2">
           <p>© {new Date().getFullYear()} {LEGAL_ENTITY}.</p>
-          <p className="ev text-[0.5625rem]">
-            Specialist · Selective · Outcome-led · Ecosystem-connected
-          </p>
         </div>
       </div>
     </footer>

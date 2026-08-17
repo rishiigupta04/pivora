@@ -1414,12 +1414,6 @@ export const COVERAGE = [
   },
 ];
 
-export const KPMG_PROOF = {
-  year: "2023",
-  what: "KPMG in India × OutSystems alliance",
-  note: "Announced while Subrato was Regional Vice President at OutSystems. This is a milestone from his career prior to founding Pivora — not a Pivora engagement.",
-};
-
 /* ------------------------------------------------------------------ *
  * CAREERS — §13
  * This page qualifies a candidate the way every other page qualifies a
