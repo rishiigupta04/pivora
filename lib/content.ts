@@ -1663,6 +1663,12 @@ export const OPEN_ITEMS = [
       "Brief §15 requires Privacy, Terms and Cookie Notice live before any form goes live. The three pages exist with the required structure and are honestly labelled as pending legal review. The site will process personal data under India's DPDP Act and potentially GDPR.",
   },
   {
+    item: "Legal pages are unreachable from the site",
+    status: "Removed on instruction",
+    detail:
+      "The footer's registration block, which linked Privacy, Terms and Cookie Notice, was removed at your request. The three pages are still live and still in sitemap.xml, but no page links to them — so §15's requirement that they be reachable before any form goes live is unmet, and §18's no-orphan-pages check fails on all three. That matters more than it normally would here because the Contact and Careers forms collect personal data under the DPDP Act and potentially GDPR, and a visitor has no route to the policy governing it. Restoring the links is a three-line change to Footer.tsx; a single discreet line above the copyright would also do it.",
+  },
+  {
     item: "Footer registration block",
     status: "Awaiting disclosure preference",
     detail:

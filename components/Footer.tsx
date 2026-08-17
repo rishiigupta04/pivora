@@ -1,15 +1,19 @@
 import Link from "next/link";
 import { INDEX } from "@/lib/nav";
-import { LEGAL_ENTITY, LEGAL_PAGES } from "@/lib/content";
+import { LEGAL_ENTITY } from "@/lib/content";
 
 /**
  * The footer carries the full map, so nothing defined in §3.2 depends on a
  * visitor opening the header index to find it.
  *
- * §15.1 lists four items for the registration block — entity name,
- * registered address, LLPIN/CIN and GST number — and asks which should be
- * public. Only the entity name is published until that comes back; a
- * placeholder address would be worse than an absent one.
+ * NO LEGAL LINKS HERE, ON INSTRUCTION.
+ *
+ * The registration block — entity name plus Privacy, Terms and Cookie
+ * Notice — was removed at the client's request. The three pages are still
+ * live and still in the sitemap, but nothing on the site links to them, so
+ * §15's requirement that they be reachable from the footer before any form
+ * goes live is currently unmet. Flagged in OPEN_ITEMS rather than quietly
+ * dropped, because the site collects personal data through two forms.
  */
 export default function Footer() {
   return (
@@ -57,24 +61,7 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* ── legal & registration ─────────────────────────────── */}
-        <div className="rule-t mt-14 pt-8">
-          <p className="text-sm text-bone">{LEGAL_ENTITY}</p>
-          <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1">
-            {LEGAL_PAGES.map((p) => (
-              <li key={p.slug}>
-                <Link
-                  href={`/${p.slug}`}
-                  className="block py-2 text-sm text-bone-2 transition-colors hover:text-gold md:py-0"
-                >
-                  {p.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="mt-8 text-xs text-bone-2">
+        <div className="rule-t mt-14 pt-8 text-xs text-bone-2">
           <p>© {new Date().getFullYear()} {LEGAL_ENTITY}.</p>
         </div>
       </div>
